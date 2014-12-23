@@ -1,0 +1,27 @@
+h3. In order to be considered for a position, you must follow these steps.
+Note: This task should take no longer than 30-60 minutes at the most. 
+
+# Fork this repository (if you don't know how to do that, google is your friend)
+# Please import the existing Android app into Android Studio and refactor it to fix the issues listed below. The application is a simple application that connects to the "github api":http://api.github.com and pulls down the latest commits from the "rails/rails":http://github.com/rails/rails repository. Howevere, there are three issues which need to be fixed. 
+
+** Issue 1: There a missing dependency on the build, fix that to compile the app.
+** Issue 2: The app automatically closes upon the start of the app. The app should start and run.
+** Issue 3: Even if you make the app doesn't crash on startup, when the network is slow sometimes the user will get an "ANR error":http://developer.android.com/guide/practices/design/responsiveness.html#anr , this should not happen. Please fix the code to make sure this does not happen. 
+** Issue 4: When it does run, it doesnt look like "the screenshot":https://github.com/luciofm/job_application_challenge/blob/master/correct.png   The app should look like the screenshot.
+
+"The final app should look like this":https://github.com/luciofm/job_application_challenge/blob/master/correct.png
+
+Bonus points:
+** Add a loading indicator while performing the HTTP call
+** Better yet if it is NOT a modal/blocking dialog
+** Implement the ViewHolder pattern on the List Adapter.
+
+
+Super Extra Bonus point:
+** Change the ListView for the new and awesome RecyclerView.
+
+h2. Once Complete
+# Commit and Push your code to your new repository
+# Send me a pull request, we will review your code and get back to you
+
+Feel free to use any resource you want: Google, Android Developer documentation site, stackoverflow, etc...
