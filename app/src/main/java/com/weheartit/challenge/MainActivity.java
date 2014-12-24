@@ -28,8 +28,6 @@ import java.util.Scanner;
 
 public class MainActivity extends Activity {
 
-    final String TAG = "MainActivity";
-
     ListView list;
 
     @Override
@@ -93,7 +91,6 @@ public class MainActivity extends Activity {
         }
 
         protected void onPostExecute(ArrayList<CommitModel> model) {
-            Log.d(TAG, "on post execute " + model.size());
             list.setAdapter(new CommitAdapter(model));
         }
 
