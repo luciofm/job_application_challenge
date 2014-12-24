@@ -1,8 +1,11 @@
 package com.weheartit.challenge;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,8 @@ import java.util.Scanner;
 
 public class MainActivity extends Activity {
 
+    final String TAG = "MainActivity";
+
     ListView list;
 
     @Override
@@ -47,38 +52,51 @@ public class MainActivity extends Activity {
 
         list = (ListView)findViewById(android.R.id.list);
 
-        // To up to github and get the most recent rails commits and show them to the screen. 
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet get = new HttpGet("https://api.github.com/repos/rails/rails/commits");
-        HttpResponse response = null;
-        try {
-            response = client.execute(get);
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        GetGitHubInfoTask getGitHubInfoTask = new GetGitHubInfoTask();
+        getGitHubInfoTask.execute();
+    }
 
-        ArrayList<CommitModel> model = new ArrayList<>();
-        if(response.getStatusLine().getStatusCode() == 200) {
-            InputStream stream = null;
+    class GetGitHubInfoTask extends AsyncTask<Void, Void, ArrayList<CommitModel>> {
+
+        @Override
+        protected ArrayList<CommitModel> doInBackground(Void... params) {
+            // To up to github and get the most recent rails commits and show them to the screen.
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet get = new HttpGet("https://api.github.com/repos/rails/rails/commits");
+            HttpResponse response = null;
             try {
-                stream = response.getEntity().getContent();
-            } catch (IllegalStateException e) {
+                response = client.execute(get);
+            } catch (ClientProtocolException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            String json = new Scanner(stream).useDelimiter("\\A").next();
-            model = new Gson().fromJson(json, new TypeToken<ArrayList<CommitModel>>(){}.getType());
+
+            ArrayList<CommitModel> model = new ArrayList<>();
+            if(response.getStatusLine().getStatusCode() == 200) {
+                InputStream stream = null;
+                try {
+                    stream = response.getEntity().getContent();
+                } catch (IllegalStateException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                String json = new Scanner(stream).useDelimiter("\\A").next();
+                model = new Gson().fromJson(json, new TypeToken<ArrayList<CommitModel>>(){}.getType());
+            }
+
+            return model;
         }
 
-        list.setAdapter(new CommitAdapter(model));
-
+        protected void onPostExecute(ArrayList<CommitModel> model) {
+            Log.d(TAG, "on post execute " + model.size());
+            list.setAdapter(new CommitAdapter(model));
+        }
 
     }
 
